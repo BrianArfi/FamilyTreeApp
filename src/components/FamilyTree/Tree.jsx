@@ -92,8 +92,17 @@ const Tree = ({ data, onSelect }) => {
                 console.log(`Rendering Family ${fIdx + 1} with root ${root.name}`);
 
                 return (
-                    <div key={fIdx} style={{ position: 'relative', minHeight: '400px', marginBottom: '200px', borderTop: fIdx > 0 ? '1px dashed #ccc' : 'none', paddingTop: '40px' }}>
-                        <div style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '10px' }}>FAMILY GROUP {fIdx + 1}</div>
+                    <div key={fIdx} style={{
+                        position: 'relative',
+                        minHeight: '200px', // Reduced from 400px
+                        marginBottom: '60px', // Reduced from 200px
+                        borderTop: fIdx > 0 ? '1px dashed #e2e8f0' : 'none',
+                        paddingTop: '40px'
+                    }}>
+                        <div style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ width: '24px', height: '1px', background: '#cbd5e1' }}></span>
+                            FAMILY GROUP {fIdx + 1}
+                        </div>
                         <ReactFamilyTree
                             nodes={family}
                             rootId={root.id}
@@ -107,7 +116,9 @@ const Tree = ({ data, onSelect }) => {
                                     style={{
                                         width: WIDTH - 40,
                                         height: HEIGHT - 40,
-                                        transform: `translate(${node.left * WIDTH}px, ${node.top * HEIGHT}px)`,
+                                        // Shift right by 500px to prevent left clipping (negative coordinates)
+                                        // The library centers the tree at 0. So left children are at negative X.
+                                        transform: `translate(${node.left * WIDTH + 500}px, ${node.top * HEIGHT}px)`,
                                     }}
                                 />
                             )}

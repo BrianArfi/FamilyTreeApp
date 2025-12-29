@@ -39,49 +39,78 @@ const Tree = ({ data, onSelect }) => {
         });
     }, [data]);
 
-    // Track which nodes the library actually renders
-    const [renderedIds, setRenderedIds] = React.useState(new Set());
+    // Group nodes into disconnected families
+    const families = useMemo(() => {
+        if (formattedNodes.length === 0) return [];
 
-    const rootId = useMemo(() => {
-        if (formattedNodes.length === 0) return null;
-        const withoutParents = formattedNodes.find(p => p.parents.length === 0);
-        return withoutParents ? withoutParents.id : formattedNodes[0].id;
+        const visited = new Set();
+        const results = [];
+
+        formattedNodes.forEach(startNode => {
+            if (visited.has(startNode.id)) return;
+
+            const family = [];
+            const queue = [startNode.id];
+            visited.add(startNode.id);
+
+            while (queue.length > 0) {
+                const id = queue.shift();
+                const node = formattedNodes.find(n => n.id === id);
+                if (!node) continue;
+                family.push(node);
+
+                // Find all immediate relatives
+                const relatives = [
+                    ...node.parents.map(p => p.id),
+                    ...node.spouses.map(s => s.id),
+                    ...formattedNodes.filter(n => n.parents.some(p => p.id === id)).map(n => n.id),
+                    ...formattedNodes.filter(n => n.spouses.some(s => s.id === id)).map(n => n.id)
+                ];
+
+                relatives.forEach(relId => {
+                    if (!visited.has(relId)) {
+                        visited.add(relId);
+                        queue.push(relId);
+                    }
+                });
+            }
+            results.push(family);
+        });
+
+        return results;
     }, [formattedNodes]);
 
     if (data.length === 0) return <div style={{ padding: '2rem', textAlign: 'center' }}>No family data yet. Add someone to start!</div>;
 
-    // Disconnected nodes that the library might miss
-    const disconnectedNodes = formattedNodes.filter(n => !renderedIds.has(n.id));
-
     return (
-        <div className="tree-container" style={{ padding: '100px' }}>
-            {/* The main tree */}
-            <ReactFamilyTree
-                nodes={formattedNodes}
-                rootId={rootId}
-                width={WIDTH}
-                height={HEIGHT}
-                renderNode={(node) => {
-                    // Update rendered IDs in an effect to avoid render warnings
-                    // But for simplicity in this specific library, we assume connected ones show up
-                    return (
-                        <Node
-                            key={node.id}
-                            node={node}
-                            isRoot={node.id === rootId}
-                            onSelect={() => onSelect(data.find(p => String(p.id) === node.id))}
-                            style={{
-                                width: WIDTH - 20,
-                                height: HEIGHT - 20,
-                                transform: `translate(${node.left * WIDTH}px, ${node.top * HEIGHT}px)`,
-                            }}
-                        />
-                    );
-                }}
-            />
+        <div className="tree-container" style={{ padding: '50px' }}>
+            {families.map((family, index) => {
+                // Pick a root for this specific family
+                const familyRoot = family.find(n => n.parents.length === 0) || family[0];
 
-            {/* If there are more members not connected to the root, we'll show them as a list/grid at the bottom for now so they don't disappear */}
-            {/* Real fix: Use a library that supports multiple roots or calculate multiple root trees */}
+                return (
+                    <div key={index} style={{ marginBottom: '100px', position: 'relative' }}>
+                        <ReactFamilyTree
+                            nodes={family}
+                            rootId={familyRoot.id}
+                            width={WIDTH}
+                            height={HEIGHT}
+                            renderNode={(node) => (
+                                <Node
+                                    key={node.id}
+                                    node={node}
+                                    onSelect={() => onSelect(data.find(p => String(p.id) === node.id))}
+                                    style={{
+                                        width: WIDTH - 20,
+                                        height: HEIGHT - 20,
+                                        transform: `translate(${node.left * WIDTH}px, ${node.top * HEIGHT}px)`,
+                                    }}
+                                />
+                            )}
+                        />
+                    </div>
+                );
+            })}
         </div>
     );
 };

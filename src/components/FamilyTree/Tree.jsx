@@ -9,8 +9,7 @@ const Tree = ({ data, onSelect }) => {
     const formattedNodes = useMemo(() => {
         const existingIds = new Set(data.map(p => String(p.id)));
 
-        // Stage 1: Basic Formatting
-        const baseNodes = data.map(person => {
+        return data.map(person => {
             const parents = [];
             if (person.father_id && person.father_id !== "" && existingIds.has(String(person.father_id))) {
                 parents.push({ id: String(person.father_id), type: 'blood' });
@@ -38,60 +37,75 @@ const Tree = ({ data, onSelect }) => {
                 spouses
             };
         });
-
-        // Stage 2: Add Virtual Root to connect disconnected components
-        const roots = baseNodes.filter(n => n.parents.length === 0);
-        const virtualRootId = 'VIRTUAL_ROOT_ID';
-
-        const finalNodes = baseNodes.map(node => {
-            if (node.parents.length === 0) {
-                return { ...node, parents: [{ id: virtualRootId, type: 'blood' }] };
-            }
-            return node;
-        });
-
-        finalNodes.push({
-            id: virtualRootId,
-            gender: 'male',
-            parents: [],
-            children: roots.map(r => ({ id: r.id, type: 'blood' })),
-            siblings: [],
-            spouses: [],
-            isVirtual: true
-        });
-
-        return finalNodes;
     }, [data]);
+
+    // Split nodes into disconnected families
+    const families = useMemo(() => {
+        const visited = new Set();
+        const results = [];
+
+        formattedNodes.forEach(node => {
+            if (visited.has(node.id)) return;
+            const family = [];
+            const queue = [node.id];
+            visited.add(node.id);
+
+            while (queue.length > 0) {
+                const id = queue.shift();
+                const n = formattedNodes.find(i => i.id === id);
+                if (!n) continue;
+                family.push(n);
+
+                // Find all relatives to group them
+                const relatives = [
+                    ...n.parents.map(p => p.id),
+                    ...formattedNodes.filter(o => o.parents.some(p => p.id === id)).map(o => o.id),
+                    ...n.spouses.map(s => s.id),
+                    ...formattedNodes.filter(o => o.spouses.some(s => s.id === id)).map(o => o.id)
+                ];
+
+                relatives.forEach(relId => {
+                    if (!visited.has(relId)) {
+                        visited.add(relId);
+                        queue.push(relId);
+                    }
+                });
+            }
+            results.push(family);
+        });
+        return results;
+    }, [formattedNodes]);
 
     if (data.length === 0) return <div style={{ padding: '2rem', textAlign: 'center' }}>No family data yet. Add someone to start!</div>;
 
-    const rootId = 'VIRTUAL_ROOT_ID';
-
     return (
-        <div className="tree-container" style={{ minWidth: '2000px', minHeight: '2000px', padding: '200px' }}>
-            <ReactFamilyTree
-                nodes={formattedNodes}
-                rootId={rootId}
-                width={WIDTH}
-                height={HEIGHT}
-                renderNode={(node) => {
-                    if (node.id === 'VIRTUAL_ROOT_ID') return null;
-
-                    const originalPerson = data.find(p => String(p.id) === node.id);
-                    return (
-                        <Node
-                            key={node.id}
-                            node={{ ...node, ...originalPerson }} // Merge back full details
-                            onSelect={() => onSelect(originalPerson)}
-                            style={{
-                                width: WIDTH - 30,
-                                height: HEIGHT - 30,
-                                transform: `translate(${node.left * WIDTH}px, ${node.top * HEIGHT}px)`,
-                            }}
+        <div className="tree-container" style={{ minHeight: '800px' }}>
+            {families.map((family, familyIndex) => {
+                const root = family.find(n => n.parents.length === 0) || family[0];
+                return (
+                    <div key={familyIndex} style={{ position: 'relative' }}>
+                        <ReactFamilyTree
+                            nodes={family}
+                            rootId={root.id}
+                            width={WIDTH}
+                            height={HEIGHT}
+                            renderNode={(node) => (
+                                <Node
+                                    key={node.id}
+                                    node={node}
+                                    onSelect={() => onSelect(data.find(p => String(p.id) === node.id))}
+                                    style={{
+                                        width: WIDTH - 40,
+                                        height: HEIGHT - 40,
+                                        // Offset each family vertically so they don't overlap
+                                        transform: `translate(${node.left * WIDTH + 50}px, ${node.top * HEIGHT + (familyIndex * (HEIGHT * 2)) + 50}px)`,
+                                    }}
+                                />
+                            )}
                         />
-                    );
-                }}
-            />
+                    </div>
+                );
+            })}
         </div>
     );
 };

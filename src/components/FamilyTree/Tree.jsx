@@ -19,6 +19,15 @@ const Tree = ({ data, onSelect }) => {
                 parents.push({ id: String(person.mother_id), type: 'blood' });
             }
 
+            const spouses = [];
+            if (person.spouses && person.spouses !== "") {
+                person.spouses.split(',').forEach(spouseId => {
+                    if (spouseId !== "" && existingIds.has(String(spouseId))) {
+                        spouses.push({ id: String(spouseId), type: 'married' });
+                    }
+                });
+            }
+
             return {
                 ...person,
                 id: String(person.id),
@@ -26,7 +35,7 @@ const Tree = ({ data, onSelect }) => {
                 parents,
                 children: [],
                 siblings: [],
-                spouses: []
+                spouses
             };
         });
     }, [data]);

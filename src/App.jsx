@@ -89,6 +89,7 @@ function App() {
       {isAdminModalOpen && (
         <AdminModal
           person={selectedPerson}
+          allMembers={familyData}
           onClose={() => setIsAdminModalOpen(false)}
           onSave={handleSave}
           onDelete={handleDelete}

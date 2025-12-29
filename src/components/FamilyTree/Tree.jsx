@@ -89,7 +89,16 @@ const Tree = ({ data, onSelect }) => {
                 const familyRoot = family.find(n => n.parents.length === 0) || family[0];
 
                 return (
-                    <div key={index} style={{ marginBottom: '100px', position: 'relative' }}>
+                    <div key={index} style={{
+                        marginBottom: '100px',
+                        position: 'relative',
+                        minHeight: '200px', // Ensure space for the family
+                        borderLeft: '2px dashed var(--border-color)',
+                        paddingLeft: '20px'
+                    }}>
+                        <div style={{ position: 'absolute', top: -30, left: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                            Family Group {index + 1}
+                        </div>
                         <ReactFamilyTree
                             nodes={family}
                             rootId={familyRoot.id}

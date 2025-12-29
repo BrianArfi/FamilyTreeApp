@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL || 'YOUR_DEPLOYED_WEB_APP_URL';
+const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbxkWLLM2hXOJeF1Du0-swlZFLXdvbDHhlF680Tgfkcp7uqaheKECVemJtv6gz0zUKpO5A/exec';
 
 /**
  * Fetch all family members

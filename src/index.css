@@ -137,12 +137,29 @@ body {
   background-color: #f8fafc;
   background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px);
   background-size: 30px 30px;
-  min-height: 600px;
+  min-height: 800px;
+  padding: 100px;
+}
+
+.tree-canvas {
+  position: relative;
+  min-width: 2000px;
+  min-height: 2000px;
+}
+
+.tree-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
 }
 
 .node-card {
   position: absolute;
-  /* CRITICAL for tree positioning */
+  z-index: 20;
   background: var(--card-bg);
   border-radius: 12px;
   padding: 1rem;

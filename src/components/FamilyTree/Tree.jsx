@@ -83,22 +83,35 @@ const Tree = ({ data, onSelect }) => {
     if (data.length === 0) return <div style={{ padding: '2rem', textAlign: 'center' }}>No family data yet. Add someone to start!</div>;
 
     return (
-        <div className="tree-container" style={{ padding: '50px' }}>
+        <div className="tree-container" style={{ padding: '80px' }}>
+            {families.length === 0 && <div style={{ padding: '2rem' }}>No data found.</div>}
+
             {families.map((family, index) => {
-                // Pick a root for this specific family
+                // Find a root (someone with no parents)
                 const familyRoot = family.find(n => n.parents.length === 0) || family[0];
 
                 return (
-                    <div key={index} style={{
-                        marginBottom: '100px',
+                    <div key={index} className="family-section" style={{
+                        marginBottom: '150px',
                         position: 'relative',
-                        minHeight: '200px', // Ensure space for the family
-                        borderLeft: '2px dashed var(--border-color)',
-                        paddingLeft: '20px'
+                        minHeight: '300px',
+                        borderLeft: '3px solid var(--primary-light)',
+                        paddingLeft: '40px'
                     }}>
-                        <div style={{ position: 'absolute', top: -30, left: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                            Family Group {index + 1}
+                        <div style={{
+                            position: 'absolute',
+                            top: -40,
+                            left: 0,
+                            background: 'var(--primary-light)',
+                            padding: '4px 12px',
+                            borderRadius: '20px',
+                            fontSize: '0.75rem',
+                            fontWeight: 'bold',
+                            color: 'var(--primary)'
+                        }}>
+                            FAMILY GROUP {index + 1}
                         </div>
+
                         <ReactFamilyTree
                             nodes={family}
                             rootId={familyRoot.id}
@@ -110,8 +123,8 @@ const Tree = ({ data, onSelect }) => {
                                     node={node}
                                     onSelect={() => onSelect(data.find(p => String(p.id) === node.id))}
                                     style={{
-                                        width: WIDTH - 20,
-                                        height: HEIGHT - 20,
+                                        width: WIDTH - 30,
+                                        height: HEIGHT - 30,
                                         transform: `translate(${node.left * WIDTH}px, ${node.top * HEIGHT}px)`,
                                     }}
                                 />

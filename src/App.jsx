@@ -76,15 +76,34 @@ function App() {
         </div>
       </header>
 
-      <main className="tree-container">
-        {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            Loading family data...
+      <div className="main-layout">
+        <aside className="sidebar">
+          <div className="sidebar-header">ALL FAMILY MEMBERS ({familyData.length})</div>
+          <div className="member-list">
+            {familyData.map(person => (
+              <div key={person.id} className="member-item" onClick={() => handleSelect(person)}>
+                <div className="node-avatar" style={{ width: '32px', height: '32px', marginBottom: 0 }}>
+                  <Network size={16} />
+                </div>
+                <div>
+                  <div className="member-item-name">{person.name}</div>
+                  <div className="member-item-info">{person.gender}</div>
+                </div>
+              </div>
+            ))}
           </div>
-        ) : (
-          <Tree data={familyData} onSelect={handleSelect} />
-        )}
-      </main>
+        </aside>
+
+        <main className="tree-container">
+          {loading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+              Loading family data...
+            </div>
+          ) : (
+            <Tree data={familyData} onSelect={handleSelect} />
+          )}
+        </main>
+      </div>
 
       {isAdminModalOpen && (
         <AdminModal

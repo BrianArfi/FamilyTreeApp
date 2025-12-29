@@ -25,7 +25,8 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-main);
-  overflow: hidden; /* We'll use a scrollable tree container */
+  overflow: hidden;
+  /* We'll use a scrollable tree container */
 }
 
 #root {
@@ -77,9 +78,60 @@ body {
   background-color: var(--primary-dark);
 }
 
-.tree-container {
+.main-layout {
+  display: flex;
   flex: 1;
   margin-top: 64px;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.member-list {
+  list-style: none;
+}
+
+.member-item {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.member-item:hover {
+  background: var(--bg-color);
+}
+
+.member-item-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.member-item-info {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.tree-container {
+  flex: 1;
   position: relative;
   overflow: auto;
   background: radial-gradient(#e2e8f0 1px, transparent 1px);

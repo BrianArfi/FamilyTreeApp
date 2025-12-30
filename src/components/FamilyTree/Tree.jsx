@@ -29,7 +29,7 @@ const Tree = ({ data, onSelect }) => {
         };
         members.forEach(m => getLevel(m.id));
 
-        // 2. Arrange Rows with Spouse Grouping
+        // 2. Position members with Spouse Grouping
         const positioned = [];
         const levelGroups = {};
         members.forEach(m => {
@@ -45,8 +45,6 @@ const Tree = ({ data, onSelect }) => {
 
             row.forEach(m => {
                 if (processed.has(m.id)) return;
-
-                // Find all spouses of this member in the SAME row
                 const spouseIds = (m.spouses || "").split(',').map(s => s.trim()).filter(Boolean);
                 const group = [m];
                 processed.add(m.id);
@@ -61,20 +59,17 @@ const Tree = ({ data, onSelect }) => {
                     }
                 });
 
-                // Put the main person in the middle of their spouses if polygamous
                 if (group.length > 2) {
                     const main = group[0];
                     group.shift();
                     const half = Math.floor(group.length / 2);
                     group.splice(half, 0, main);
                 }
-
                 groupedRow.push(...group);
             });
 
             const totalWidth = groupedRow.length * CARD_WIDTH + (groupedRow.length - 1) * H_GAP;
             const startX = CANVAS_CENTER - totalWidth / 2;
-
             groupedRow.forEach((m, i) => {
                 const x = startX + i * (CARD_WIDTH + H_GAP);
                 const y = Number(lvl) * (CARD_HEIGHT + V_GAP) + 100;
@@ -84,32 +79,28 @@ const Tree = ({ data, onSelect }) => {
             });
         });
 
-        // 3. Generate Relationship Lines
+        // 3. Generate Lines
         const lines = [];
-        const drawnMarriageLines = new Set();
 
-        // Marriage Lines: Connect ALL spouses
+        // Marriage lines (Bus)
+        const drawnMarriagePairs = new Set();
         positioned.forEach(m => {
             const spouseIds = (m.spouses || "").split(',').map(s => s.trim()).filter(Boolean);
             spouseIds.forEach(sid => {
                 const s = positioned.find(p => p.id === sid);
-                if (s) {
-                    const pairId = [m.id, sid].sort().join('-');
-                    if (!drawnMarriageLines.has(pairId)) {
-                        lines.push({
-                            type: 'marriage',
-                            x1: Math.min(m.x, s.x) + CARD_WIDTH,
-                            y1: m.y + CARD_HEIGHT / 2,
-                            x2: Math.max(m.x, s.x),
-                            y2: m.y + CARD_HEIGHT / 2
-                        });
-                        drawnMarriageLines.add(pairId);
+                if (s && m.y === s.y) {
+                    const pairId = [m.id, s.id].sort().join('-');
+                    if (!drawnMarriagePairs.has(pairId)) {
+                        const x1 = Math.min(m.x, s.x) + CARD_WIDTH;
+                        const x2 = Math.max(m.x, s.x);
+                        lines.push({ type: 'marriage', x1, y1: m.y + CARD_HEIGHT / 2, x2, y2: m.y + CARD_HEIGHT / 2 });
+                        drawnMarriagePairs.add(pairId);
                     }
                 }
             });
         });
 
-        // Parent-Child Connectors (Orthogonal)
+        // Parent-Child lines with GAP routing
         positioned.forEach(child => {
             const fId = child.father_id ? String(child.father_id) : null;
             const mId = child.mother_id ? String(child.mother_id) : null;
@@ -117,7 +108,10 @@ const Tree = ({ data, onSelect }) => {
             const m = mId ? positioned.find(p => p.id === mId) : null;
 
             if (f && m) {
-                const midX = (f.x + m.x + CARD_WIDTH) / 2;
+                // Drop vertical from GAP center between parents
+                const xLeft = Math.min(f.x, m.x) + CARD_WIDTH;
+                const xRight = Math.max(f.x, m.x);
+                const midX = (xLeft + xRight) / 2;
                 const midY = f.y + CARD_HEIGHT + (V_GAP / 3);
                 lines.push({
                     type: 'connector',
@@ -153,13 +147,12 @@ const Tree = ({ data, onSelect }) => {
                 <svg className="tree-lines" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
                     {layout.lines.map((line, i) => (
                         line.type === 'marriage' ? (
-                            <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#f472b6" strokeWidth="4" strokeDasharray="6,4" strokeLinecap="round" />
+                            <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#ec4899" strokeWidth="4" strokeDasharray="8,6" strokeLinecap="round" />
                         ) : (
-                            <path key={i} d={line.path} fill="none" stroke="#cbd5e1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                            <path key={i} d={line.path} fill="none" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                         )
                     ))}
                 </svg>
-
                 {layout.members.map(member => (
                     <Node key={member.id} node={member} onSelect={() => onSelect(member)} style={{ left: member.x, top: member.y, width: CARD_WIDTH, height: CARD_HEIGHT }} />
                 ))}

@@ -196,9 +196,10 @@ body {
 .node-name {
   font-weight: 600;
   font-size: 0.9rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.2;
+  margin-top: 4px;
+  color: var(--text-main);
+  /* Removed truncation to show full names */
 }
 
 .node-date {

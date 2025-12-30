@@ -135,16 +135,14 @@ body {
   position: relative;
   overflow: auto;
   background-color: #f8fafc;
-  background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px);
-  background-size: 30px 30px;
-  min-height: 800px;
-  padding: 100px;
+  background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+  background-size: 40px 40px;
 }
 
 .tree-canvas {
   position: relative;
-  min-width: 2000px;
-  min-height: 2000px;
+  width: 5000px;
+  height: 5000px;
 }
 
 .tree-lines {
@@ -154,18 +152,19 @@ body {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 10;
+  z-index: 5;
 }
 
 .node-card {
   position: absolute;
-  z-index: 20;
+  z-index: 10;
   background: var(--card-bg);
   border-radius: 12px;
   padding: 1rem;
   box-shadow: var(--shadow);
   /* Assuming --shadow-sm is not defined, keeping --shadow */
-  width: 180px;
+  width: 200px;
+  min-height: 100px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border-left: 4px solid var(--border-color);
@@ -174,7 +173,6 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  user-select: none;
 }
 
 .node-card:hover {

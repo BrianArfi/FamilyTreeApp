@@ -29,7 +29,29 @@ const Tree = ({ data, onSelect }) => {
         };
         members.forEach(m => getLevel(m.id));
 
-        // 2. Position members with Spouse Grouping
+        // 2. Build Spouse Map (Both from 'spouses' field and shared parenthood)
+        const spouseMap = new Map();
+        const addSpouse = (id1, id2) => {
+            if (!spouseMap.has(id1)) spouseMap.set(id1, new Set());
+            if (!spouseMap.has(id2)) spouseMap.set(id2, new Set());
+            spouseMap.get(id1).add(id2);
+            spouseMap.get(id2).add(id1);
+        };
+
+        members.forEach(m => {
+            // From spouses field
+            const sids = (m.spouses || "").split(',').map(s => s.trim()).filter(Boolean);
+            sids.forEach(sid => { if (idMap.has(sid)) addSpouse(m.id, sid); });
+
+            // From shared parenthood
+            const fId = m.father_id ? String(m.father_id) : null;
+            const mId = m.mother_id ? String(m.mother_id) : null;
+            if (fId && mId && idMap.has(fId) && idMap.has(mId)) {
+                addSpouse(fId, mId);
+            }
+        });
+
+        // 3. Position members with Spouse Grouping
         const positioned = [];
         const levelGroups = {};
         members.forEach(m => {
@@ -45,19 +67,22 @@ const Tree = ({ data, onSelect }) => {
 
             row.forEach(m => {
                 if (processed.has(m.id)) return;
-                const spouseIds = (m.spouses || "").split(',').map(s => s.trim()).filter(Boolean);
+
                 const group = [m];
                 processed.add(m.id);
 
-                spouseIds.forEach(sid => {
-                    if (!processed.has(sid)) {
-                        const spouse = row.find(r => r.id === sid);
-                        if (spouse) {
-                            group.push(spouse);
-                            processed.add(sid);
+                const spouses = spouseMap.get(m.id);
+                if (spouses) {
+                    spouses.forEach(sid => {
+                        if (!processed.has(sid)) {
+                            const spouse = row.find(r => r.id === sid);
+                            if (spouse) {
+                                group.push(spouse);
+                                processed.add(sid);
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 if (group.length > 2) {
                     const main = group[0];
@@ -79,25 +104,27 @@ const Tree = ({ data, onSelect }) => {
             });
         });
 
-        // 3. Generate Lines
+        // 4. Generate Lines
         const lines = [];
-
-        // Marriage lines (Bus)
         const drawnMarriagePairs = new Set();
+
+        // Marriage lines
         positioned.forEach(m => {
-            const spouseIds = (m.spouses || "").split(',').map(s => s.trim()).filter(Boolean);
-            spouseIds.forEach(sid => {
-                const s = positioned.find(p => p.id === sid);
-                if (s && m.y === s.y) {
-                    const pairId = [m.id, s.id].sort().join('-');
-                    if (!drawnMarriagePairs.has(pairId)) {
-                        const x1 = Math.min(m.x, s.x) + CARD_WIDTH;
-                        const x2 = Math.max(m.x, s.x);
-                        lines.push({ type: 'marriage', x1, y1: m.y + CARD_HEIGHT / 2, x2, y2: m.y + CARD_HEIGHT / 2 });
-                        drawnMarriagePairs.add(pairId);
+            const spouses = spouseMap.get(m.id);
+            if (spouses) {
+                spouses.forEach(sid => {
+                    const s = positioned.find(p => p.id === sid);
+                    if (s && m.y === s.y) {
+                        const pairId = [m.id, s.id].sort().join('-');
+                        if (!drawnMarriagePairs.has(pairId)) {
+                            const x1 = Math.min(m.x, s.x) + CARD_WIDTH;
+                            const x2 = Math.max(m.x, s.x);
+                            lines.push({ type: 'marriage', x1, y1: m.y + CARD_HEIGHT / 2, x2, y2: m.y + CARD_HEIGHT / 2 });
+                            drawnMarriagePairs.add(pairId);
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 
         // Parent-Child lines with GAP routing
@@ -108,7 +135,6 @@ const Tree = ({ data, onSelect }) => {
             const m = mId ? positioned.find(p => p.id === mId) : null;
 
             if (f && m) {
-                // Drop vertical from GAP center between parents
                 const xLeft = Math.min(f.x, m.x) + CARD_WIDTH;
                 const xRight = Math.max(f.x, m.x);
                 const midX = (xLeft + xRight) / 2;

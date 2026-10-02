@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FamilyTreeApp before / after</title>
+<!-- Rendered to docs/before-after.gif by render.py.
+     Before = illustration (a typical family spreadsheet and group chat).
+     After  = app-tree.png, a real screenshot of this app in sample mode (fictional family), taken by shoot_app.py. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F1F3EE;--field:#0D453E;--ink:#072B27;--signal:#C8F751;
+        --sans:'Archivo',system-ui,sans-serif;--mono:'JetBrains Mono',Consolas,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1200px;height:720px;overflow:hidden}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);position:relative}
+  .frame{position:absolute;left:36px;top:30px;width:1128px;height:620px;border:3px solid var(--ink);border-radius:18px;
+    box-shadow:6px 6px 0 var(--ink);overflow:hidden;background:#fff}
+  .panel{position:absolute;inset:0;z-index:1}
+  .panel.after{z-index:2}
+  .chip{position:absolute;left:20px;top:18px;z-index:5;font-family:var(--mono);font-weight:700;font-size:20px;padding:6px 14px;border-radius:10px;border:3px solid var(--ink)}
+  .before .chip{background:#fff}
+  .after .chip{background:var(--signal)}
+
+  /* BEFORE: a spreadsheet and a chat */
+  .before{background:#FAFAF7}
+  .sheet{position:absolute;left:28px;top:78px;width:760px;border:2px solid #b9c2bf;border-collapse:collapse;font-size:19px;background:#fff}
+  .sheet th,.sheet td{border:1px solid #cfd6d3;padding:9px 10px;text-align:left;white-space:nowrap}
+  .sheet th{background:#E9EEEC;font-family:var(--mono);font-size:16px;color:#3c4f4a}
+  .sheet td.q{color:#b4231b;font-weight:700}
+  .tabs{position:absolute;left:28px;top:556px;display:flex;gap:6px;font-family:var(--mono);font-size:16px}
+  .tabs span{border:2px solid #b9c2bf;border-top:none;padding:6px 12px;background:#fff;color:#55615e}
+  .tabs span.on{background:#E9EEEC;color:var(--ink);font-weight:700}
+  .bub{position:absolute;width:300px;background:#fff;border:3px solid var(--ink);border-radius:16px;padding:12px 15px;font-size:20px;line-height:1.3;font-weight:500;box-shadow:5px 5px 0 rgba(7,43,39,.2)}
+  .bub small{display:block;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--field);margin-bottom:3px}
+  .bub1{left:804px;top:96px}
+  .bub2{left:804px;top:250px;background:#E6F4D2}
+  .bub3{left:804px;top:392px}
+
+  /* AFTER: the real app */
+  .after{background:var(--paper);clip-path:inset(0 100% 0 0);animation:wipe 1.6s cubic-bezier(.6,0,.3,1) 2.8s both, back .6s ease 9.3s forwards}
+  .shot{position:absolute;left:24px;top:70px;width:670px;height:532px;border:3px solid var(--ink);border-radius:12px;overflow:hidden;background:#fff}
+  .shot img{width:670px;display:block}
+  .points{position:absolute;left:730px;top:110px;width:360px;display:flex;flex-direction:column;gap:20px}
+  .pt{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:14px 16px;font-size:21px;line-height:1.3;font-weight:700;box-shadow:5px 5px 0 var(--ink)}
+  .pt b{font-weight:900}
+  .pt1{animation:pop .4s ease 4.6s both} .pt2{animation:pop .4s ease 5.2s both} .pt3{animation:pop .4s ease 5.8s both}
+  .bar{position:absolute;top:0;bottom:0;width:8px;margin-left:-4px;background:var(--signal);border-left:3px solid var(--ink);border-right:3px solid var(--ink);left:0;z-index:6;
+    animation:slide 1.6s cubic-bezier(.6,0,.3,1) 2.8s both, hide .2s ease 4.4s forwards}
+  .cap{position:absolute;left:36px;right:36px;top:672px;font-family:var(--mono);font-size:16px;color:#4f625d;text-align:center}
+
+  @keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+  @keyframes slide{from{left:0}to{left:100%}}
+  @keyframes hide{from{opacity:1}to{opacity:0}}
+  @keyframes back{from{opacity:1}to{opacity:0}}
+  @keyframes pop{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="panel before">
+    <div class="chip">BEFORE</div>
+    <table class="sheet">
+      <tr><th>Name</th><th>Parents</th><th>Married to</th><th>Born</th></tr>
+      <tr><td>Arthur Hale</td><td></td><td>Rose</td><td>1938</td></tr>
+      <tr><td>Sam Hale</td><td>Arthur + Rose</td><td>Dina (see tab 2)</td><td>21/6/66</td></tr>
+      <tr><td>Nora</td><td>Arthur?</td><td></td><td>1964</td></tr>
+      <tr><td>Maya Hale</td><td>Sam, Dina</td><td>Theo</td><td>16-05-1993</td></tr>
+      <tr><td>Theo Lane</td><td>Leo (tab 3)</td><td>Maya</td><td class="q">??</td></tr>
+      <tr><td>Ivy</td><td>Maya &amp; Theo</td><td></td><td>2018</td></tr>
+      <tr><td>Jack</td><td class="q">same as Ivy</td><td></td><td>2020</td></tr>
+      <tr><td>Owen Hale</td><td>Sam/Dina</td><td></td><td class="q">ask Nora</td></tr>
+    </table>
+    <div class="tabs"><span class="on">Hale</span><span>Price</span><span>Lane</span><span>old list</span><span>old list (2)</span></div>
+    <div class="bub bub1"><small>Ivy</small>Which tab has Grandma Dina's side?</div>
+    <div class="bub bub2"><small>Owen</small>Is Theo on our list or the Lane one?</div>
+    <div class="bub bub3"><small>Nora</small>Don't edit it, I'll fix it later</div>
+  </div>
+  <div class="panel after">
+    <div class="chip">AFTER</div>
+    <div class="shot"><img src="app-tree.png" alt=""></div>
+    <div class="points">
+      <div class="pt pt1"><b>4 generations</b>, one row each, couples side by side</div>
+      <div class="pt pt2">One link: anyone can open a member and look</div>
+      <div class="pt pt3">Saving a change needs the <b>admin password</b></div>
+    </div>
+  </div>
+  <div class="bar"></div>
+</div>
+<div class="cap">Before: illustration. After: real screenshot of this app, fictional sample family.</div>
+</body>
+</html>

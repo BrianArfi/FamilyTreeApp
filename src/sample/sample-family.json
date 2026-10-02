@@ -1,0 +1,15 @@
+[
+  { "id": "1", "name": "Arthur Hale", "gender": "Male", "birth_date": "12-04-1938", "death_date": "03-11-2019", "father_id": "", "mother_id": "", "spouses": "2", "bio": "", "photo_url": "" },
+  { "id": "2", "name": "Rose Hale", "gender": "Female", "birth_date": "27-09-1941", "death_date": "", "father_id": "", "mother_id": "", "spouses": "1", "bio": "", "photo_url": "" },
+  { "id": "3", "name": "Elena Price", "gender": "Female", "birth_date": "05-02-1943", "death_date": "", "father_id": "", "mother_id": "", "spouses": "", "bio": "", "photo_url": "" },
+  { "id": "4", "name": "Grace Lane", "gender": "Female", "birth_date": "18-07-1945", "death_date": "", "father_id": "", "mother_id": "", "spouses": "", "bio": "", "photo_url": "" },
+  { "id": "5", "name": "Nora Hale", "gender": "Female", "birth_date": "09-01-1964", "death_date": "", "father_id": "1", "mother_id": "2", "spouses": "", "bio": "", "photo_url": "" },
+  { "id": "6", "name": "Sam Hale", "gender": "Male", "birth_date": "21-06-1966", "death_date": "", "father_id": "1", "mother_id": "2", "spouses": "7", "bio": "", "photo_url": "" },
+  { "id": "7", "name": "Dina Price", "gender": "Female", "birth_date": "14-10-1968", "death_date": "", "father_id": "", "mother_id": "3", "spouses": "6", "bio": "", "photo_url": "" },
+  { "id": "8", "name": "Leo Lane", "gender": "Male", "birth_date": "30-03-1967", "death_date": "", "father_id": "", "mother_id": "4", "spouses": "", "bio": "", "photo_url": "" },
+  { "id": "9", "name": "Owen Hale", "gender": "Male", "birth_date": "02-08-1991", "death_date": "", "father_id": "6", "mother_id": "7", "spouses": "", "bio": "", "photo_url": "" },
+  { "id": "10", "name": "Maya Hale", "gender": "Female", "birth_date": "16-05-1993", "death_date": "", "father_id": "6", "mother_id": "7", "spouses": "11", "bio": "", "photo_url": "" },
+  { "id": "11", "name": "Theo Lane", "gender": "Male", "birth_date": "11-12-1992", "death_date": "", "father_id": "8", "mother_id": "", "spouses": "10", "bio": "", "photo_url": "" },
+  { "id": "12", "name": "Ivy Lane", "gender": "Female", "birth_date": "04-03-2018", "death_date": "", "father_id": "11", "mother_id": "10", "spouses": "", "bio": "", "photo_url": "" },
+  { "id": "13", "name": "Jack Lane", "gender": "Male", "birth_date": "22-09-2020", "death_date": "", "father_id": "11", "mother_id": "10", "spouses": "", "bio": "", "photo_url": "" }
+]

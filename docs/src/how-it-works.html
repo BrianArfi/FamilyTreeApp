@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FamilyTreeApp how it works</title>
+<!-- Illustration. Rendered to docs/how-it-works.gif by render.py. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F1F3EE;--field:#0D453E;--ink:#072B27;--signal:#C8F751;
+        --sans:'Archivo',system-ui,sans-serif;--mono:'JetBrains Mono',Consolas,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1200px;height:660px;overflow:hidden}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);position:relative}
+  .all{position:absolute;inset:0;animation:out .5s ease 10.5s forwards}
+  h2{position:absolute;left:40px;top:26px;font-size:34px;font-weight:900;letter-spacing:-.02em}
+  h2 .hl{position:relative;z-index:0}
+  h2 .hl:after{content:"";position:absolute;left:-4px;right:-4px;bottom:2px;height:13px;background:var(--signal);z-index:-1;border-radius:3px}
+  .box{position:absolute;top:96px;width:250px;height:300px;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:6px 6px 0 var(--ink);padding:16px 16px}
+  .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--signal);border:3px solid var(--ink);font-family:var(--mono);font-weight:700;font-size:18px}
+  .box h3{margin-top:10px;font-size:23px;font-weight:900;line-height:1.1;letter-spacing:-.01em}
+  .box p{margin-top:8px;font-size:18px;line-height:1.3;font-weight:500;color:#173F39}
+  .box code{font-family:var(--mono);font-size:15px;background:#EEF2EF;border-radius:4px;padding:1px 4px}
+  .b1{left:40px;animation:pop .45s ease .3s both}
+  .b2{left:330px;animation:pop .45s ease 1.3s both}
+  .b3{left:620px;animation:pop .45s ease 2.3s both}
+  .b4{left:910px;animation:pop .45s ease 3.3s both}
+
+  .grid{margin-top:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+  .grid i{height:16px;background:#E2E9E6;border-radius:2px}
+  .grid i.h{background:#9FB6AE}
+  .mini{margin-top:12px;position:relative;height:84px}
+  .mini b{position:absolute;width:42px;height:18px;border:2px solid var(--ink);border-radius:5px;background:#fff}
+  .mini s{position:absolute;height:2px;background:#7d8f8a}
+  .role{margin-top:10px;display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700}
+  .role span{font-family:var(--mono);font-size:14px;padding:2px 7px;border:2px solid var(--ink);border-radius:6px;background:#fff}
+  .role.admin span{background:var(--signal)}
+
+  svg{position:absolute;left:0;top:0;overflow:visible}
+  .ar{fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+  .a1{animation:draw .4s ease 1.0s both} .a2{animation:draw .4s ease 2.0s both} .a3{animation:draw .4s ease 3.0s both}
+  .a4{animation:draw .9s ease 6.4s both}
+  .head{opacity:0}
+  .h1{animation:show .1s linear 1.35s both} .h2{animation:show .1s linear 2.35s both} .h3{animation:show .1s linear 3.35s both}
+  .h4{animation:show .1s linear 7.25s both}
+  .lbl{position:absolute;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--field);text-align:center}
+  .l1{left:286px;top:206px;width:48px;animation:show .3s ease 1.2s both}
+
+  .dot{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--signal);border:4px solid var(--ink);margin:-11px 0 0 -11px;opacity:0}
+  .d1{top:246px;animation:travel 2.4s linear 4.0s both}
+  .d2{animation:back 1.3s ease-in-out 7.5s both}
+  .ret{position:absolute;left:330px;top:478px;width:700px;text-align:center;font-size:20px;font-weight:700;animation:pop .4s ease 6.9s both}
+  .ret code{font-family:var(--mono);font-size:17px;background:#fff;border:2px solid var(--ink);border-radius:6px;padding:2px 7px}
+  .ret small{display:block;margin-top:8px;font-size:18px;font-weight:500;color:#173F39}
+  .tag{position:absolute;right:22px;bottom:14px;font-family:var(--mono);font-size:15px;color:#6b7f79}
+
+  @keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+  @keyframes show{from{opacity:0}to{opacity:1}}
+  @keyframes out{from{opacity:1}to{opacity:0}}
+  @keyframes travel{0%{left:296px;opacity:0}6%{left:300px;opacity:1}24%{left:318px}40%{left:590px}56%{left:606px}72%{left:880px}90%{left:896px;opacity:1}100%{left:960px;opacity:0}}
+  @keyframes back{0%{left:1035px;top:410px;opacity:0}5%{opacity:1}30%{left:1035px;top:448px;opacity:1}70%{left:455px;top:448px;opacity:1}95%{opacity:1}100%{left:455px;top:410px;opacity:0}}
+</style>
+</head>
+<body>
+<div class="all">
+  <h2>From one sheet to a tree <span class="hl">the whole family can open</span></h2>
+
+  <svg width="1200" height="660">
+    <path class="ar a1" pathLength="1" d="M293 246 H322"/>
+    <path class="ar a2" pathLength="1" d="M583 246 H612"/>
+    <path class="ar a3" pathLength="1" d="M873 246 H902"/>
+    <path class="head h1" d="M314 236 L326 246 L314 256" fill="none" stroke="#072B27" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="head h2" d="M604 236 L616 246 L604 256" fill="none" stroke="#072B27" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="head h3" d="M894 236 L906 246 L894 256" fill="none" stroke="#072B27" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="ar a4" pathLength="1" d="M1035 404 V448 H455 V408" stroke-dasharray="1"/>
+    <path class="head h4" d="M445 418 L455 404 L465 418" fill="none" stroke="#072B27" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <div class="dot d1"></div>
+  <div class="dot d2"></div>
+  <div class="box b1"><span class="n">1</span><h3>Google Sheet</h3>
+    <p>One row per person: name, gender, born, father, mother, spouses.</p>
+    <div class="grid"><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+  <div class="box b2"><span class="n">2</span><h3>Apps Script web app</h3>
+    <p><code>GET</code> returns everyone as JSON.</p>
+    <p><code>POST</code> adds, edits or deletes a row, if the password is right.</p>
+  </div>
+  <div class="box b3"><span class="n">3</span><h3>Layout engine</h3>
+    <p>Generation = how many parents up. Couples side by side, lines drawn.</p>
+    <div class="mini">
+      <b style="left:52px;top:0"></b><b style="left:118px;top:0"></b><s style="left:94px;top:9px;width:24px;background:#ec4899"></s>
+      <s style="left:106px;top:9px;width:2px;height:46px"></s><s style="left:40px;top:46px;width:130px"></s>
+      <b style="left:18px;top:56px"></b><b style="left:85px;top:56px"></b><b style="left:150px;top:56px"></b>
+    </div>
+  </div>
+  <div class="box b4"><span class="n">4</span><h3>Your family</h3>
+    <div class="role"><span>VIEW</span>Everyone browses</div>
+    <p>Scroll the tree, open any member.</p>
+    <div class="role admin"><span>EDIT</span>Admin only</div>
+    <p>Add, edit, delete with the password.</p>
+  </div>
+
+  <div class="ret">Admin saves: <code>POST {action, password, data}</code>
+    <small>Your Apps Script checks the password, writes the sheet, and the tree reloads.</small></div>
+</div>
+<div class="tag">Illustration</div>
+</body>
+</html>

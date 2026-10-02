@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FamilyTreeApp hero</title>
+<!-- Illustration, not a screenshot. Rendered to docs/hero.gif (9 s loop) and docs/hero.png (the end state)
+     by render.py. Names are the fictional sample family from src/sample/sample-family.json. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F1F3EE;--field:#0D453E;--ink:#072B27;--signal:#C8F751;--m:#2563eb;--f:#ec4899;
+        --sans:'Archivo',system-ui,sans-serif;--mono:'JetBrains Mono',Consolas,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1400px;height:700px;overflow:hidden}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);position:relative}
+
+  .copy{position:absolute;left:64px;top:150px;width:600px}
+  .kicker{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--field);margin-bottom:26px;display:inline-flex;align-items:center;gap:12px}
+  .kicker i{width:14px;height:14px;border-radius:3px;background:var(--signal);border:3px solid var(--ink)}
+  h1{font-size:64px;line-height:1.06;font-weight:900;letter-spacing:-.035em}
+  h1 .hl{position:relative;z-index:0;white-space:nowrap}
+  h1 .hl:after{content:"";position:absolute;left:-6px;right:-6px;bottom:4px;height:24px;background:var(--signal);z-index:-1;border-radius:4px}
+  .sub{margin-top:24px;font-size:25px;line-height:1.35;font-weight:500;color:var(--field);width:540px}
+  .pills{margin-top:30px;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+  .pill{display:inline-flex;align-items:center;gap:12px;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px 18px;
+    font-size:22px;font-weight:800;box-shadow:5px 5px 0 var(--ink)}
+  .pill.lock{background:var(--signal)}
+  .p1{animation:pop .45s cubic-bezier(.2,1.4,.4,1) 5.7s both, out .5s ease 8.45s forwards}
+  .p2{animation:pop .45s cubic-bezier(.2,1.4,.4,1) 6.3s both, out .5s ease 8.45s forwards}
+
+  .stage{position:absolute;left:740px;top:60px;width:600px;height:580px}
+  .tree{position:absolute;inset:0;animation:out .5s ease 8.45s forwards}
+
+  /* problem: the family group chat */
+  .chat{position:absolute;left:40px;top:70px;width:520px}
+  .chat .hd{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--field);margin-bottom:16px;
+    animation:pop .35s ease .1s both, gone .4s ease 2.1s forwards}
+  .b{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:12px 16px;font-size:22px;line-height:1.3;font-weight:500;
+    margin-bottom:14px;width:430px;box-shadow:5px 5px 0 rgba(7,43,39,.18)}
+  .b small{display:block;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--field);margin-bottom:4px}
+  .b.r{margin-left:90px;background:#E6F4D2}
+  .b1{animation:pop .35s ease .3s both, gone .4s ease 2.15s forwards}
+  .b2{animation:pop .35s ease .85s both, gone .4s ease 2.2s forwards}
+  .b3{animation:pop .35s ease 1.4s both, gone .4s ease 2.25s forwards}
+
+  .card{position:absolute;width:150px;height:64px;background:#fff;border:3px solid var(--ink);border-radius:14px;
+    box-shadow:5px 5px 0 var(--ink);display:flex;align-items:center;gap:10px;padding:0 12px;font-size:19px;font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+  .card i{flex:none;width:12px;height:30px;border-radius:4px}
+  .card.m i{background:var(--m)} .card.f i{background:var(--f)}
+  .g1{top:0;animation:pop .45s cubic-bezier(.2,1.4,.4,1) 2.5s both}
+  .g2{top:140px;animation:pop .45s cubic-bezier(.2,1.4,.4,1) 3.3s both}
+  .g3{top:280px;animation:pop .45s cubic-bezier(.2,1.4,.4,1) 4.1s both}
+  .g4{top:420px;animation:pop .45s cubic-bezier(.2,1.4,.4,1) 4.9s both}
+  .gl{position:absolute;left:-66px;font-family:var(--mono);font-size:17px;font-weight:700;color:var(--field);line-height:64px}
+
+  svg{position:absolute;left:0;top:0;overflow:visible}
+  .ln{fill:none;stroke:#7d8f8a;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+  .mar{fill:none;stroke:var(--f);stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+  .l1{animation:draw .5s ease 2.9s both} .l2{animation:draw .6s ease 3.7s both}
+  .l3{animation:draw .6s ease 4.5s both} .l4{animation:draw .6s ease 5.3s both}
+
+  .tag{position:absolute;right:22px;bottom:16px;font-family:var(--mono);font-size:15px;color:#6b7f79}
+
+  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.92)}to{opacity:1;transform:none}}
+  @keyframes gone{from{opacity:1;transform:none}to{opacity:0;transform:translateX(60px)}}
+  @keyframes out{from{opacity:1}to{opacity:0}}
+  @keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+  <div class="copy">
+    <div class="kicker"><i></i>FamilyTreeApp</div>
+    <h1>Every generation.<br><span class="hl">One readable tree.</span></h1>
+    <p class="sub">Your family list, laid out generation by generation, on one link everyone can open.</p>
+    <div class="pills">
+      <div class="pill p1">Everyone can browse</div>
+      <div class="pill lock p2">Only the admin edits, with a password</div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="chat">
+      <div class="hd">Family group chat</div>
+      <div class="b b1"><small>Ivy</small>Who was Grandpa Sam's dad again?</div>
+      <div class="b r b2"><small>Owen</small>Ask Aunt Nora, she has the list</div>
+      <div class="b b3"><small>Nora</small>It's in the spreadsheet. Tab 3, or 4?</div>
+    </div>
+
+    <div class="tree">
+      <svg width="600" height="500">
+        <!-- marriages -->
+        <path class="mar l1" pathLength="1" d="M285 32 H315"/>
+        <path class="mar l2" pathLength="1" d="M375 172 H405"/>
+        <path class="mar l3" pathLength="1" d="M375 312 H405"/>
+        <!-- parents to children -->
+        <path class="ln l1" pathLength="1" d="M300 32 V105 H120 V140"/>
+        <path class="ln l1" pathLength="1" d="M300 32 V140"/>
+        <path class="ln l2" pathLength="1" d="M390 172 V245 H120 V280"/>
+        <path class="ln l2" pathLength="1" d="M390 172 V245 H300 V280"/>
+        <path class="ln l3" pathLength="1" d="M390 312 V385 H210 V420"/>
+        <path class="ln l3" pathLength="1" d="M390 312 V420"/>
+      </svg>
+      <div class="gl g1">Gen 1</div><div class="gl g2">Gen 2</div><div class="gl g3">Gen 3</div><div class="gl g4">Gen 4</div>
+      <div class="card m g1" style="left:135px"><i></i>Arthur</div>
+      <div class="card f g1" style="left:315px"><i></i>Rose</div>
+      <div class="card f g2" style="left:45px"><i></i>Nora</div>
+      <div class="card m g2" style="left:225px"><i></i>Sam</div>
+      <div class="card f g2" style="left:405px"><i></i>Dina</div>
+      <div class="card m g3" style="left:45px"><i></i>Owen</div>
+      <div class="card f g3" style="left:225px"><i></i>Maya</div>
+      <div class="card m g3" style="left:405px"><i></i>Theo</div>
+      <div class="card f g4" style="left:135px"><i></i>Ivy</div>
+      <div class="card m g4" style="left:315px"><i></i>Jack</div>
+    </div>
+  </div>
+  <div class="tag">Illustration</div>
+</body>
+</html>
